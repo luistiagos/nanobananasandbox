@@ -1,0 +1,350 @@
+{% extends 'base.html' %}
+
+{% block title %}AI Image Editor - NanoBananaPro{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <!-- Page Header -->
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-3">AI Image Editor</h1>
+        <p class="text-gray-600">Upload an image and edit it using natural language prompts. Apply multiple edits iteratively to achieve your desired result.</p>
+    </div>
+
+    <!-- Upload Form (Initial Upload) -->
+    <div id="uploadSection" class="bg-white rounded-lg shadow-md p-8 mb-6">
+        <form id="uploadForm" class="space-y-6">
+            <!-- File Upload -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Upload Image to Edit
+                </label>
+                <div class="mt-2 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:border-purple-400 transition-colors cursor-pointer" id="dropZone">
+                    <div class="space-y-2 text-center">
+                        <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        <div class="text-sm text-gray-600">
+                            <label for="fileInput" class="relative cursor-pointer bg-white rounded-md font-medium text-purple-600 hover:text-purple-500">
+                                <span>Upload a file</span>
+                                <input id="fileInput" name="image" type="file" accept="image/jpeg,image/jpg,image/png,image/webp" class="sr-only">
+                            </label>
+                            <span class="pl-1">or drag and drop</span>
+                        </div>
+                        <p class="text-xs text-gray-500">PNG, JPG, WEBP up to 10MB</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Image Preview -->
+            <div id="imagePreview" class="hidden">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Preview</label>
+                <div class="relative inline-block">
+                    <img id="previewImage" src="" alt="Preview" class="max-h-64 rounded-lg border border-gray-300">
+                    <button type="button" id="removeImage" class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Edit Prompt -->
+            <div>
+                <label for="editPrompt" class="block text-sm font-medium text-gray-700 mb-2">
+                    Describe Your Edit
+                </label>
+                <textarea
+                    id="editPrompt"
+                    rows="3"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+                    placeholder="e.g., 'make the sky more dramatic', 'remove the person on the left', 'add warm lighting', 'change background to white'"
+                ></textarea>
+                <p class="mt-1 text-sm text-gray-500">Describe the changes you want to make to the image</p>
+            </div>
+
+            <!-- Edit Button -->
+            <button
+                type="submit"
+                id="editBtn"
+                class="w-full bg-purple-600 text-white py-3 px-6 rounded-lg hover:bg-purple-700 transition-colors duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+                Apply Edit
+            </button>
+        </form>
+
+        <!-- Error Message -->
+        <div id="errorMessage" class="hidden mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <p class="text-red-800 text-sm"></p>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loadingState" class="hidden bg-white rounded-lg shadow-md p-12">
+        <div class="text-center">
+            <div class="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-purple-600 mb-4"></div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">Processing Your Edit...</h3>
+            <p class="text-gray-600">AI is applying your changes. This may take a moment.</p>
+        </div>
+    </div>
+
+    <!-- Result Display (with Continue Editing) -->
+    <div id="resultDisplay" class="hidden bg-white rounded-lg shadow-md p-8">
+        <h3 class="text-xl font-semibold text-gray-900 mb-6">Edited Image</h3>
+
+        <!-- Current Image Display -->
+        <div class="mb-6">
+            <img id="editedImage" src="" alt="Edited Image" class="w-full max-w-3xl mx-auto rounded-lg shadow-lg border border-gray-200">
+        </div>
+
+        <!-- Continue Editing Section -->
+        <div class="bg-gray-50 rounded-lg p-6 mb-6">
+            <h4 class="text-lg font-semibold text-gray-900 mb-4">Continue Editing</h4>
+            <form id="continueEditForm" class="space-y-4">
+                <div>
+                    <label for="continueEditPrompt" class="block text-sm font-medium text-gray-700 mb-2">
+                        Apply Another Edit
+                    </label>
+                    <textarea
+                        id="continueEditPrompt"
+                        rows="3"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+                        placeholder="e.g., 'make it brighter', 'add more contrast', 'blur the background'"
+                    ></textarea>
+                </div>
+                <button
+                    type="submit"
+                    id="continueEditBtn"
+                    class="w-full bg-purple-600 text-white py-3 px-6 rounded-lg hover:bg-purple-700 transition-colors duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    Apply Another Edit
+                </button>
+            </form>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex justify-center gap-4">
+            <a id="downloadBtn" href="#" download class="bg-green-600 text-white py-2 px-6 rounded-lg hover:bg-green-700 transition-colors duration-200 font-medium">
+                Download Image
+            </a>
+            <button
+                id="startNewBtn"
+                class="bg-gray-600 text-white py-2 px-6 rounded-lg hover:bg-gray-700 transition-colors duration-200 font-medium"
+            >
+                Start New Image
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const uploadForm = document.getElementById('uploadForm');
+    const continueEditForm = document.getElementById('continueEditForm');
+    const uploadSection = document.getElementById('uploadSection');
+    const fileInput = document.getElementById('fileInput');
+    const dropZone = document.getElementById('dropZone');
+    const imagePreview = document.getElementById('imagePreview');
+    const previewImage = document.getElementById('previewImage');
+    const removeImage = document.getElementById('removeImage');
+    const editPrompt = document.getElementById('editPrompt');
+    const continueEditPrompt = document.getElementById('continueEditPrompt');
+    const editBtn = document.getElementById('editBtn');
+    const continueEditBtn = document.getElementById('continueEditBtn');
+    const loadingState = document.getElementById('loadingState');
+    const resultDisplay = document.getElementById('resultDisplay');
+    const editedImage = document.getElementById('editedImage');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const startNewBtn = document.getElementById('startNewBtn');
+    const errorMessage = document.getElementById('errorMessage');
+
+    let selectedFile = null;
+    let currentImageFilename = null;
+
+    // File input change handler
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+            handleFile(e.target.files[0]);
+        }
+    });
+
+    // Drag and drop handlers
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('border-purple-500', 'bg-purple-50');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('border-purple-500', 'bg-purple-50');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('border-purple-500', 'bg-purple-50');
+
+        if (e.dataTransfer.files.length > 0) {
+            handleFile(e.dataTransfer.files[0]);
+            fileInput.files = e.dataTransfer.files;
+        }
+    });
+
+    // Handle file selection
+    function handleFile(file) {
+        // Validate file type
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+        if (!allowedTypes.includes(file.type)) {
+            showError('Invalid file type. Please upload a JPG, PNG, or WEBP image.');
+            return;
+        }
+
+        // Validate file size (10MB)
+        if (file.size > 10 * 1024 * 1024) {
+            showError('File size too large. Maximum size is 10MB.');
+            return;
+        }
+
+        selectedFile = file;
+        hideError();
+
+        // Show preview
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            previewImage.src = e.target.result;
+            imagePreview.classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+    }
+
+    // Remove image handler
+    removeImage.addEventListener('click', () => {
+        selectedFile = null;
+        fileInput.value = '';
+        imagePreview.classList.add('hidden');
+        previewImage.src = '';
+    });
+
+    // Initial upload form submission
+    uploadForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const prompt = editPrompt.value.trim();
+
+        if (!selectedFile) {
+            showError('Please select an image to edit.');
+            return;
+        }
+
+        if (!prompt) {
+            showError('Please describe the edit you want to apply.');
+            return;
+        }
+
+        await performEdit(selectedFile, prompt, true);
+    });
+
+    // Continue editing form submission
+    continueEditForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const prompt = continueEditPrompt.value.trim();
+
+        if (!prompt) {
+            showError('Please describe the edit you want to apply.');
+            return;
+        }
+
+        if (!currentImageFilename) {
+            showError('No image to edit. Please start with a new upload.');
+            return;
+        }
+
+        await performEdit(null, prompt, false);
+    });
+
+    // Perform edit (either initial or continue)
+    async function performEdit(file, prompt, isInitial) {
+        // Hide error and prepare UI
+        hideError();
+        loadingState.classList.remove('hidden');
+        uploadSection.classList.add('hidden');
+        resultDisplay.classList.add('hidden');
+
+        if (isInitial) {
+            editBtn.disabled = true;
+        } else {
+            continueEditBtn.disabled = true;
+        }
+
+        try {
+            // Prepare form data
+            const formData = new FormData();
+            formData.append('prompt', prompt);
+
+            if (isInitial && file) {
+                // Initial upload
+                formData.append('image', file);
+            } else {
+                // Continue editing - reference the current image
+                formData.append('current_image', currentImageFilename);
+            }
+
+            // Make API request
+            const response = await fetch('/api/edit-image/', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                // Update current image
+                currentImageFilename = data.filename;
+                editedImage.src = data.image_url;
+                downloadBtn.href = data.image_url;
+                downloadBtn.download = data.filename;
+
+                // Clear the prompt
+                continueEditPrompt.value = '';
+
+                // Show result
+                resultDisplay.classList.remove('hidden');
+            } else {
+                showError(data.error || 'Failed to edit image. Please try again.');
+                uploadSection.classList.remove('hidden');
+            }
+        } catch (error) {
+            showError('Network error. Please check your connection and try again.');
+            console.error('Error:', error);
+            uploadSection.classList.remove('hidden');
+        } finally {
+            // Hide loading state
+            loadingState.classList.add('hidden');
+            if (isInitial) {
+                editBtn.disabled = false;
+            } else {
+                continueEditBtn.disabled = false;
+            }
+        }
+    }
+
+    // Start new image handler
+    startNewBtn.addEventListener('click', () => {
+        resultDisplay.classList.add('hidden');
+        uploadSection.classList.remove('hidden');
+        removeImage.click();
+        editPrompt.value = '';
+        continueEditPrompt.value = '';
+        currentImageFilename = null;
+        uploadSection.scrollIntoView({ behavior: 'smooth' });
+    });
+
+    // Error handling
+    function showError(message) {
+        errorMessage.querySelector('p').textContent = message;
+        errorMessage.classList.remove('hidden');
+        uploadSection.classList.remove('hidden');
+    }
+
+    function hideError() {
+        errorMessage.classList.add('hidden');
+    }
+</script>
+{% endblock %}

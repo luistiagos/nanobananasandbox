@@ -1,0 +1,397 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Mystery Tools Grid - Single Row Layout -->
+<div class="flex justify-center items-center min-h-[calc(100vh-200px)]">
+    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 max-w-7xl w-full px-4">
+        <!-- Tool 1: Text to Image -->
+        <div class="tool-card mystery" data-tool-id="tool1" data-level="1" data-stars="1"
+             data-name="Text to Image" data-url="{% url 'tools:text_to_image' %}"
+             data-earnings="$5-10" data-color="blue"
+             data-description="Transform your text descriptions into stunning, high-quality images using advanced AI models.">
+            <div class="mystery-content">
+                <div class="question-mark">?</div>
+                <div class="level-badge">Level 1</div>
+                <div class="stars">★☆☆☆☆</div>
+                <div class="earnings-badge mystery-earnings">💰 $5-10/hour</div>
+                <button class="reveal-btn">Reveal Tool</button>
+            </div>
+            <div class="revealed-content hidden">
+                <div class="tool-icon bg-blue-100">
+                    <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                </div>
+                <h3 class="tool-title">Text to Image</h3>
+                <p class="tool-desc"></p>
+                <div class="earnings-badge">💰 $5-10</div>
+                <button class="open-btn bg-blue-600 hover:bg-blue-700">Open Tool</button>
+            </div>
+        </div>
+
+        <!-- Tool 2: Sketch to Image -->
+        <div class="tool-card mystery" data-tool-id="tool2" data-level="2" data-stars="2"
+             data-name="Sketch to Image" data-url="{% url 'tools:sketch_to_image' %}"
+             data-earnings="$5-10" data-color="green"
+             data-description="Convert your rough sketches and drawings into polished, professional-looking images instantly.">
+            <div class="mystery-content">
+                <div class="question-mark">?</div>
+                <div class="level-badge">Level 2</div>
+                <div class="stars">★★☆☆☆</div>
+                <div class="earnings-badge mystery-earnings">💰 $5-10/hour</div>
+                <button class="reveal-btn">Reveal Tool</button>
+            </div>
+            <div class="revealed-content hidden">
+                <div class="tool-icon bg-green-100">
+                    <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                    </svg>
+                </div>
+                <h3 class="tool-title">Sketch to Image</h3>
+                <p class="tool-desc"></p>
+                <div class="earnings-badge">💰 $5-10</div>
+                <button class="open-btn bg-green-600 hover:bg-green-700">Open Tool</button>
+            </div>
+        </div>
+
+        <!-- Tool 3: Product Ad Enhancer -->
+        <div class="tool-card mystery" data-tool-id="tool3" data-level="3" data-stars="3"
+             data-name="Product Ad Enhancer" data-url="{% url 'tools:product_ad_enhancer' %}"
+             data-earnings="$10-30" data-color="purple"
+             data-description="Enhance your product photos with AI to create eye-catching advertisements that drive sales.">
+            <div class="mystery-content">
+                <div class="question-mark">?</div>
+                <div class="level-badge">Level 3</div>
+                <div class="stars">★★★☆☆</div>
+                <div class="earnings-badge mystery-earnings">💰 $10-30/hour</div>
+                <button class="reveal-btn">Reveal Tool</button>
+            </div>
+            <div class="revealed-content hidden">
+                <div class="tool-icon bg-purple-100">
+                    <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+                    </svg>
+                </div>
+                <h3 class="tool-title">Product Ad Enhancer</h3>
+                <p class="tool-desc"></p>
+                <div class="earnings-badge">💰 $10-30</div>
+                <button class="open-btn bg-purple-600 hover:bg-purple-700">Open Tool</button>
+            </div>
+        </div>
+
+        <!-- Tool 4: Image Editor -->
+        <div class="tool-card mystery" data-tool-id="tool4" data-level="4" data-stars="4"
+             data-name="Image Editor" data-url="{% url 'tools:image_editor' %}"
+             data-earnings="$10-30" data-color="orange"
+             data-description="Edit images using natural language prompts. Apply multiple AI-powered edits iteratively to perfect your vision.">
+            <div class="mystery-content">
+                <div class="question-mark">?</div>
+                <div class="level-badge">Level 4</div>
+                <div class="stars">★★★★☆</div>
+                <div class="earnings-badge mystery-earnings">💰 $10-30/hour</div>
+                <button class="reveal-btn">Reveal Tool</button>
+            </div>
+            <div class="revealed-content hidden">
+                <div class="tool-icon bg-orange-100">
+                    <svg class="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
+                </div>
+                <h3 class="tool-title">Image Editor</h3>
+                <p class="tool-desc"></p>
+                <div class="earnings-badge">💰 $10-30</div>
+                <button class="open-btn bg-orange-600 hover:bg-orange-700">Open Tool</button>
+            </div>
+        </div>
+
+        <!-- Tool 5: YouTube Thumbnail Generator -->
+        <div class="tool-card mystery" data-tool-id="tool5" data-level="5" data-stars="5"
+             data-name="YouTube Thumbnail" data-url="{% url 'tools:youtube_thumbnail_generator' %}"
+             data-earnings="$100" data-color="red"
+             data-description="Generate eye-catching, high-CTR YouTube thumbnails optimized for maximum clicks and engagement.">
+            <div class="mystery-content">
+                <div class="question-mark">?</div>
+                <div class="level-badge">Level 5</div>
+                <div class="stars">★★★★★</div>
+                <div class="earnings-badge premium mystery-earnings">💎 $100/hour</div>
+                <button class="reveal-btn">Reveal Tool</button>
+            </div>
+            <div class="revealed-content hidden">
+                <div class="tool-icon bg-red-100">
+                    <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <h3 class="tool-title">YouTube Thumbnail</h3>
+                <p class="tool-desc"></p>
+                <div class="earnings-badge premium">💎 $100</div>
+                <button class="open-btn bg-red-600 hover:bg-red-700">Open Tool</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Tool Card Styles */
+    .tool-card {
+        background: white;
+        border-radius: 1rem;
+        padding: 2rem 1.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        position: relative;
+        overflow: hidden;
+        min-height: 280px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Mystery State */
+    .tool-card.mystery {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        filter: grayscale(80%) brightness(0.7);
+    }
+
+    .tool-card.mystery:hover {
+        filter: grayscale(60%) brightness(0.8);
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .mystery-content {
+        text-align: center;
+        color: white;
+    }
+
+    .question-mark {
+        font-size: 5rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+        animation: pulse 2s ease-in-out infinite;
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+    }
+
+    @keyframes pulse {
+        0%, 100% {
+            transform: scale(1);
+            opacity: 0.8;
+        }
+        50% {
+            transform: scale(1.1);
+            opacity: 1;
+        }
+    }
+
+    .level-badge {
+        font-size: 0.875rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .stars {
+        font-size: 1.25rem;
+        margin-bottom: 1rem;
+        letter-spacing: 2px;
+    }
+
+    .reveal-btn {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .reveal-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.05);
+    }
+
+    /* Revealed State */
+    .tool-card.revealed {
+        filter: none !important;
+        background: white;
+    }
+
+    .revealed-content {
+        text-align: center;
+        animation: revealAnimation 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    @keyframes revealAnimation {
+        0% {
+            opacity: 0;
+            transform: scale(0.8) rotateY(180deg);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1) rotateY(0deg);
+        }
+    }
+
+    .tool-icon {
+        width: 4rem;
+        height: 4rem;
+        border-radius: 0.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+    }
+
+    .tool-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 0.75rem;
+    }
+
+    .tool-desc {
+        font-size: 0.875rem;
+        color: #6b7280;
+        margin-bottom: 1rem;
+        line-height: 1.5;
+        min-height: 3rem;
+    }
+
+    .earnings-badge {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 2rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        display: inline-block;
+    }
+
+    .earnings-badge.premium {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+        animation: glow 2s ease-in-out infinite;
+    }
+
+    /* Mystery state earnings badge - vibrant colors for visibility */
+    .earnings-badge.mystery-earnings {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        font-size: 1rem;
+        font-weight: 700;
+        box-shadow: 0 4px 20px rgba(16, 185, 129, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3);
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .earnings-badge.mystery-earnings.premium {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        border: 2px solid rgba(255, 215, 0, 0.8);
+        box-shadow: 0 4px 25px rgba(245, 158, 11, 0.7), 0 0 40px rgba(255, 215, 0, 0.5);
+        animation: premiumGlow 2s ease-in-out infinite;
+    }
+
+    @keyframes glow {
+        0%, 100% {
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+        }
+        50% {
+            box-shadow: 0 4px 25px rgba(245, 158, 11, 0.6);
+        }
+    }
+
+    @keyframes premiumGlow {
+        0%, 100% {
+            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.6), 0 0 30px rgba(255, 215, 0, 0.4);
+            transform: scale(1);
+        }
+        50% {
+            box-shadow: 0 6px 30px rgba(245, 158, 11, 0.8), 0 0 40px rgba(255, 215, 0, 0.6);
+            transform: scale(1.05);
+        }
+    }
+
+    .open-btn {
+        color: white;
+        padding: 0.75rem 2rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        border: none;
+        width: 100%;
+    }
+
+    .open-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .tool-card {
+            min-height: 250px;
+        }
+        .question-mark {
+            font-size: 4rem;
+        }
+    }
+</style>
+
+<script>
+    // Tool state management (per-session)
+    const toolStates = {
+        tool1: 'mystery',
+        tool2: 'mystery',
+        tool3: 'mystery',
+        tool4: 'mystery',
+        tool5: 'mystery'
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const toolCards = document.querySelectorAll('.tool-card');
+
+        toolCards.forEach(card => {
+            const toolId = card.dataset.toolId;
+            const revealBtn = card.querySelector('.reveal-btn');
+            const openBtn = card.querySelector('.open-btn');
+            const toolUrl = card.dataset.url;
+            const description = card.dataset.description;
+
+            // Set description
+            card.querySelector('.tool-desc').textContent = description;
+
+            // Reveal button click
+            revealBtn.addEventListener('click', function() {
+                if (toolStates[toolId] === 'mystery') {
+                    // Reveal the tool
+                    card.classList.remove('mystery');
+                    card.classList.add('revealed');
+                    card.querySelector('.mystery-content').classList.add('hidden');
+                    card.querySelector('.revealed-content').classList.remove('hidden');
+                    toolStates[toolId] = 'revealed';
+                }
+            });
+
+            // Open button click
+            openBtn.addEventListener('click', function() {
+                if (toolStates[toolId] === 'revealed') {
+                    toolStates[toolId] = 'accessed';
+                    window.location.href = toolUrl;
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,295 @@
+{% extends 'base.html' %}
+
+{% block title %}YouTube Thumbnail Generator - NanoBananaPro{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <!-- Page Header -->
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-3">YouTube Thumbnail Generator</h1>
+        <p class="text-gray-600">Create professional, high-CTR YouTube thumbnails with AI. Upload a reference face image and describe your vision.</p>
+    </div>
+
+    <!-- Upload Form -->
+    <div class="bg-white rounded-lg shadow-md p-8 mb-6">
+        <form id="thumbnailForm" class="space-y-6">
+            <!-- File Upload -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Upload Reference Image (Face Photo)
+                </label>
+                <div class="mt-2 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:border-red-400 transition-colors cursor-pointer" id="dropZone">
+                    <div class="space-y-2 text-center">
+                        <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        <div class="text-sm text-gray-600">
+                            <label for="fileInput" class="relative cursor-pointer bg-white rounded-md font-medium text-red-600 hover:text-red-500">
+                                <span>Upload a file</span>
+                                <input id="fileInput" name="image" type="file" accept="image/jpeg,image/jpg,image/png,image/webp" class="sr-only" required>
+                            </label>
+                            <span class="pl-1">or drag and drop</span>
+                        </div>
+                        <p class="text-xs text-gray-500">PNG, JPG, WEBP up to 10MB</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Image Preview -->
+            <div id="imagePreview" class="hidden">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Preview</label>
+                <div class="relative inline-block">
+                    <img id="previewImage" src="" alt="Preview" class="max-h-64 rounded-lg border border-gray-300">
+                    <button type="button" id="removeImage" class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Thumbnail Description -->
+            <div>
+                <label for="promptInput" class="block text-sm font-medium text-gray-700 mb-2">
+                    Describe Your Thumbnail Concept
+                </label>
+                <textarea
+                    id="promptInput"
+                    name="prompt"
+                    rows="4"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none"
+                    placeholder="e.g., 'shocked expression with tech background and glowing elements' or 'excited pointing at camera with colorful gradient background'"
+                    required
+                ></textarea>
+                <p class="mt-2 text-sm text-gray-500">Describe the expression, background, style, or mood you want for your thumbnail</p>
+            </div>
+
+            <!-- Example Prompts -->
+            <div class="bg-gray-50 rounded-lg p-4">
+                <h3 class="text-sm font-semibold text-gray-700 mb-2">Example Ideas:</h3>
+                <div class="space-y-1 text-sm text-gray-600">
+                    <p class="cursor-pointer hover:text-red-600 transition" onclick="document.getElementById('promptInput').value = this.textContent">• Shocked expression with mouth open, dramatic lighting, tech-themed background with blue and purple glow</p>
+                    <p class="cursor-pointer hover:text-red-600 transition" onclick="document.getElementById('promptInput').value = this.textContent">• Excited and smiling, pointing at camera, vibrant yellow and orange gradient background</p>
+                    <p class="cursor-pointer hover:text-red-600 transition" onclick="document.getElementById('promptInput').value = this.textContent">• Thoughtful expression with hand on chin, professional studio setup, dark background with rim lighting</p>
+                    <p class="cursor-pointer hover:text-red-600 transition" onclick="document.getElementById('promptInput').value = this.textContent">• Amazed face with wide eyes, colorful bokeh background, high contrast, energetic vibe</p>
+                </div>
+            </div>
+
+            <!-- Generate Button -->
+            <button
+                type="submit"
+                id="generateBtn"
+                class="w-full bg-red-600 text-white py-3 px-6 rounded-lg hover:bg-red-700 transition-colors duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+                Generate YouTube Thumbnail
+            </button>
+        </form>
+
+        <!-- Error Message -->
+        <div id="errorMessage" class="hidden mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <p class="text-red-800 text-sm"></p>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loadingState" class="hidden bg-white rounded-lg shadow-md p-12">
+        <div class="text-center">
+            <div class="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-red-600 mb-4"></div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">Generating Your Thumbnail...</h3>
+            <p class="text-gray-600">Creating a professional, high-CTR YouTube thumbnail. This may take a moment.</p>
+        </div>
+    </div>
+
+    <!-- Result Display -->
+    <div id="resultDisplay" class="hidden bg-white rounded-lg shadow-md p-8">
+        <h3 class="text-xl font-semibold text-gray-900 mb-6">Your YouTube Thumbnail</h3>
+
+        <!-- Thumbnail Display -->
+        <div class="mb-6">
+            <div class="bg-gray-100 rounded-lg p-4 inline-block">
+                <img id="generatedThumbnail" src="" alt="Generated Thumbnail" class="w-full max-w-4xl rounded-lg shadow-lg border-2 border-gray-300">
+            </div>
+            <p class="text-sm text-gray-500 mt-2">Optimized for YouTube (16:9 aspect ratio, 1280x720px)</p>
+        </div>
+
+        <!-- Thumbnail Tips -->
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+            <h4 class="text-sm font-semibold text-blue-900 mb-2">Next Steps:</h4>
+            <ul class="text-sm text-blue-800 space-y-1 list-disc list-inside">
+                <li>Add text overlay using design software (Canva, Photoshop, etc.) if needed</li>
+                <li>Test thumbnail visibility at different sizes</li>
+                <li>Upload to YouTube Studio and monitor your click-through rate</li>
+                <li>A/B test different versions to find what works best</li>
+            </ul>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex justify-center gap-4">
+            <a id="downloadBtn" href="#" download class="bg-green-600 text-white py-2 px-6 rounded-lg hover:bg-green-700 transition-colors duration-200 font-medium">
+                Download Thumbnail
+            </a>
+            <button
+                id="generateAnother"
+                class="bg-red-600 text-white py-2 px-6 rounded-lg hover:bg-red-700 transition-colors duration-200 font-medium"
+            >
+                Generate Another Thumbnail
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const form = document.getElementById('thumbnailForm');
+    const fileInput = document.getElementById('fileInput');
+    const dropZone = document.getElementById('dropZone');
+    const imagePreview = document.getElementById('imagePreview');
+    const previewImage = document.getElementById('previewImage');
+    const removeImage = document.getElementById('removeImage');
+    const promptInput = document.getElementById('promptInput');
+    const generateBtn = document.getElementById('generateBtn');
+    const loadingState = document.getElementById('loadingState');
+    const resultDisplay = document.getElementById('resultDisplay');
+    const generatedThumbnail = document.getElementById('generatedThumbnail');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const generateAnother = document.getElementById('generateAnother');
+    const errorMessage = document.getElementById('errorMessage');
+
+    let selectedFile = null;
+
+    // File input change handler
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+            handleFile(e.target.files[0]);
+        }
+    });
+
+    // Drag and drop handlers
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('border-red-500', 'bg-red-50');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('border-red-500', 'bg-red-50');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('border-red-500', 'bg-red-50');
+
+        if (e.dataTransfer.files.length > 0) {
+            handleFile(e.dataTransfer.files[0]);
+            fileInput.files = e.dataTransfer.files;
+        }
+    });
+
+    // Handle file selection
+    function handleFile(file) {
+        // Validate file type
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+        if (!allowedTypes.includes(file.type)) {
+            showError('Invalid file type. Please upload a JPG, PNG, or WEBP image.');
+            return;
+        }
+
+        // Validate file size (10MB)
+        if (file.size > 10 * 1024 * 1024) {
+            showError('File size too large. Maximum size is 10MB.');
+            return;
+        }
+
+        selectedFile = file;
+        hideError();
+
+        // Show preview
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            previewImage.src = e.target.result;
+            imagePreview.classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+    }
+
+    // Remove image handler
+    removeImage.addEventListener('click', () => {
+        selectedFile = null;
+        fileInput.value = '';
+        imagePreview.classList.add('hidden');
+        previewImage.src = '';
+    });
+
+    // Form submission
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        if (!selectedFile) {
+            showError('Please select a reference image.');
+            return;
+        }
+
+        const prompt = promptInput.value.trim();
+        if (!prompt) {
+            showError('Please describe your thumbnail concept.');
+            return;
+        }
+
+        // Hide error and result
+        hideError();
+        resultDisplay.classList.add('hidden');
+
+        // Show loading state
+        loadingState.classList.remove('hidden');
+        generateBtn.disabled = true;
+
+        try {
+            // Prepare form data
+            const formData = new FormData();
+            formData.append('image', selectedFile);
+            formData.append('prompt', prompt);
+
+            // Make API request
+            const response = await fetch('/api/generate-youtube-thumbnail/', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                // Show generated thumbnail
+                generatedThumbnail.src = data.image_url;
+                downloadBtn.href = data.image_url;
+                downloadBtn.download = data.filename;
+                resultDisplay.classList.remove('hidden');
+            } else {
+                showError(data.error || 'Failed to generate thumbnail. Please try again.');
+            }
+        } catch (error) {
+            showError('Network error. Please check your connection and try again.');
+            console.error('Error:', error);
+        } finally {
+            // Hide loading state
+            loadingState.classList.add('hidden');
+            generateBtn.disabled = false;
+        }
+    });
+
+    // Generate another handler
+    generateAnother.addEventListener('click', () => {
+        resultDisplay.classList.add('hidden');
+        removeImage.click();
+        promptInput.value = '';
+        form.scrollIntoView({ behavior: 'smooth' });
+    });
+
+    // Error handling
+    function showError(message) {
+        errorMessage.querySelector('p').textContent = message;
+        errorMessage.classList.remove('hidden');
+    }
+
+    function hideError() {
+        errorMessage.classList.add('hidden');
+    }
+</script>
+{% endblock %}
